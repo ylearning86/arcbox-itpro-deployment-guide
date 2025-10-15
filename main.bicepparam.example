@@ -1,0 +1,117 @@
+using 'main.bicep'
+
+// このファイルは例です。実際のデプロイ時は、このファイルをコピーして
+// 'main.bicepparam' などの名前に変更し、実際の値を設定してください。
+
+// ========== 必須パラメータ ==========
+// これらの値は必ず設定する必要があります
+
+// Azure AD テナント ID を取得: az account show --query tenantId -o tsv
+param tenantId = '00000000-0000-0000-0000-000000000000'
+
+// Windows VM の管理者ユーザー名
+param windowsAdminUsername = 'arcdemo'
+
+// Windows VM の管理者パスワード
+// 要件: 12-123文字、大文字・小文字・数字・特殊文字のうち3つを含む
+param windowsAdminPassword = 'ChangeMe123!'
+
+// Log Analytics ワークスペース名（Azure 全体で一意である必要があります）
+// 例: ArcBox-Workspace-20241015-001
+param logAnalyticsWorkspaceName = 'ArcBox-Workspace-YYYYMMDD-XXX'
+
+// ========== 基本設定 ==========
+
+// デプロイするフレーバー（ITPro, DevOps, DataOps）
+param flavor = 'ITPro'
+
+// デプロイ先のAzureリージョン
+param location = 'japaneast'
+
+// ========== ネットワーク設定 ==========
+
+// Azure Bastion をデプロイするか（true/false）
+// Bastion を使用すると、パブリック IP なしで VM に安全に接続できます
+// 注意: Bastion は追加コスト（約 $140/月）がかかります
+param deployBastion = false
+
+// Bastion SKU（Basic, Standard, Developer）
+// deployBastion が true の場合のみ有効
+param bastionSku = 'Basic'
+
+// RDP ポート番号
+// セキュリティのため、デフォルトの 3389 から変更することを推奨
+param rdpPort = '3389'
+
+// ========== VM 設定 ==========
+
+// VM に自動ログオンを有効化（true/false）
+param vmAutologon = true
+
+// SQL Server エディション（Developer, Standard, Enterprise）
+param sqlServerEdition = 'Developer'
+
+// ========== コスト最適化 ==========
+
+// VM の自動シャットダウンを有効化
+param autoShutdownEnabled = true
+
+// 自動シャットダウン時刻（24時間形式、HHmm）
+// 例: '1800' = 18:00（午後6時）
+param autoShutdownTime = '1800'
+
+// 自動シャットダウンのタイムゾーン
+param autoShutdownTimezone = 'Tokyo Standard Time'
+
+// シャットダウン前の通知メール（オプション）
+param autoShutdownEmailRecipient = ''
+
+// スポット価格を有効化（大幅なコスト削減、ただし VM が削除される可能性あり）
+param enableAzureSpotPricing = false
+
+// ========== 高度な設定 ==========
+
+// リソース名のプレフィックス（最大7文字）
+param namingPrefix = 'ArcBox'
+
+// デバッグモードを有効化（トラブルシューティング用）
+param debugEnabled = false
+
+// Availability Zone
+// '1', '2', '3' から選択
+param zones = '1'
+
+// ========== GitHub 設定 ==========
+// 通常は変更不要
+
+param githubAccount = 'microsoft'
+param githubBranch = 'main'
+param githubUser = 'Azure'
+
+// ========== タグ ==========
+// リソースに付与するタグ（任意）
+
+param resourceTags = {
+  Environment: 'Sandbox'
+  Project: 'ArcBox-ITPro'
+  Owner: 'your-email@company.com'
+  CostCenter: 'IT-Training'
+  DeploymentDate: '2024-10-15'
+}
+
+// ========== 使用例 ==========
+//
+// このファイルを使用する手順:
+//
+// 1. このファイルをコピー:
+//    cp main.bicepparam.example my-deployment.bicepparam
+//
+// 2. 実際の値を設定:
+//    code my-deployment.bicepparam
+//
+// 3. デプロイ:
+//    az deployment group create \
+//      --resource-group ArcBox-RG \
+//      --template-file main.bicep \
+//      --parameters my-deployment.bicepparam
+//

@@ -1,0 +1,46 @@
+# .gitignore for ArcBox Bicep Deployment
+
+# Bicep compiled files
+*.json
+
+# Parameter files with secrets
+*.bicepparam
+!main.bicepparam.example
+
+# Azure official repository (clone separately when needed)
+azure_arc/
+
+# Azure CLI
+.azure/
+
+# VS Code
+.vscode/
+*.code-workspace
+
+# Windows
+Thumbs.db
+Desktop.ini
+
+# MacOS
+.DS_Store
+
+# Linux
+*~
+
+# Logs
+*.log
+logs/
+
+# Temporary files
+*.tmp
+*.temp
+tmp/
+temp/
+
+# Backup files
+*.bak
+*.backup
+
+# Personal notes
+notes.txt
+TODO.md
